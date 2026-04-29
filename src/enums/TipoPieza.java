@@ -8,7 +8,7 @@ package enums;
  *
  * @author USUARIO
  */
-public enum Pieza {
+public enum TipoPieza {
     GENERAL,
     ASESOR,
     ELEFANTE,

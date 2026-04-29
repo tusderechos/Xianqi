@@ -1,0 +1,300 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package UI;
+
+/**
+ *
+ * @author Hp
+ */
+
+import java.awt.*;
+import javax.swing.*;
+import ManejoCuentas.MemoriaCuentas;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.text.JTextComponent;
+
+public class IniciarSesion extends JDialog {
+    
+    private final JLabel LblUsuario;
+    private final JTextField TxtUsuario;
+    private final JLabel LblContra;
+    private final JPasswordField PassContra;
+    private final JButton BtnLogin;
+    private final JButton BtnCancelar;
+    
+    private final MemoriaCuentas Memoria;
+    private final MenuInicial menuInicial;
+
+    public IniciarSesion(MenuInicial menuInicial, MemoriaCuentas Memoria, boolean modal) {
+        super(menuInicial, modal);
+        this.Memoria = Memoria;
+        this.menuInicial = menuInicial;
+        
+        ImageIcon IconoFondo = new ImageIcon(getClass().getResource("/images/bg_iniciarsesion.PNG"));
+        Image ImagenFondo = IconoFondo.getImage();
+        
+        JPanel PanelFondo = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(ImagenFondo, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        
+        setTitle("BATTLESHIP - Iniciar Sesion");
+        setContentPane(PanelFondo);
+        setSize(700, 700);
+        setResizable(false);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setLocationRelativeTo(null);
+        
+        JPanel PanelInfo = new JPanel();
+        PanelInfo.setLayout(new BoxLayout(PanelInfo, BoxLayout.Y_AXIS));
+        PanelInfo.setBorder(BorderFactory.createEmptyBorder(100, 15, 0, 0));
+        PanelInfo.setOpaque(false);
+        
+        LblUsuario = new JLabel("Usuario");
+        LblUsuario.setForeground(Color.WHITE);
+        EstilizarLabel(LblUsuario);
+        TxtUsuario = new JTextField("");
+        TxtUsuario.setMaximumSize(new Dimension(250, 45));
+        EstilizarCampoTexto(TxtUsuario);
+        
+        LblContra = new JLabel("Contraseña");
+        LblContra.setForeground(Color.WHITE);
+        EstilizarLabel(LblContra);
+        PassContra = new JPasswordField("");
+        PassContra.setMaximumSize(new Dimension(250, 45));
+        EstilizarCampoTexto(PassContra);
+        
+        PanelInfo.add(LblUsuario);
+        PanelInfo.add(TxtUsuario);
+        PanelInfo.add(LblContra);
+        PanelInfo.add(PassContra);
+        
+        JPanel PanelBotones = new JPanel();
+        PanelBotones.setLayout(new BoxLayout(PanelBotones, BoxLayout.X_AXIS));
+        PanelBotones.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+        PanelBotones.setOpaque(false);
+        
+        BtnLogin = new JButton("INICIAR SESION");
+        BtnLogin.addActionListener(e -> onLogin());
+        EstilizarBoton(BtnLogin);
+                
+        BtnCancelar = new JButton("CANCELAR");
+        BtnCancelar.addActionListener(e -> onSalir());
+        EstilizarBoton(BtnCancelar);
+        
+        PanelBotones.add(Box.createHorizontalStrut(60));
+        PanelBotones.add(Box.createHorizontalGlue());
+        PanelBotones.add(BtnLogin);
+        PanelBotones.add(Box.createHorizontalStrut(60));
+        PanelBotones.add(BtnCancelar);
+        PanelBotones.add(Box.createHorizontalGlue());
+        PanelBotones.add(Box.createHorizontalStrut(40));
+        
+        PanelFondo.setLayout(new BorderLayout());
+        PanelFondo.add(PanelInfo, BorderLayout.CENTER);
+        PanelFondo.add(PanelBotones, BorderLayout.SOUTH);
+        PanelFondo.repaint();
+    }
+    
+    private void LimpiarCampos() {
+        TxtUsuario.setText("");
+        PassContra.setText("");
+        TxtUsuario.requestFocus();
+    }
+    
+    public void mostrar() {
+        LimpiarCampos();
+        setLocationRelativeTo(menuInicial);        
+        getRootPane().setDefaultButton(BtnLogin);
+        setVisible(true);
+    }
+    
+    private void onLogin() {
+        String usuario = TxtUsuario.getText();
+        String contrasena = new String(PassContra.getPassword());
+        
+        if (usuario.isEmpty() || contrasena.isEmpty()) {
+            MostrarMensaje("Usuario o contraseña vacio", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        for (int i = 0; i < usuario.length(); i++) {
+            if (Character.isWhitespace(usuario.charAt(i))) {
+                MostrarMensaje("El usuario no puede contener espacios", "Error", JOptionPane.ERROR_MESSAGE);
+                TxtUsuario.requestFocus();
+                return;
+            }
+        }
+        
+        if (contrasena.length() != 5) {
+            MostrarMensaje("La contraseña debe tener exactamente 5 caracteres", "Error", JOptionPane.ERROR_MESSAGE);
+            PassContra.requestFocus();
+            return;
+        }
+        
+        for (int i = 0; i < contrasena.length(); i++) {
+            if (Character.isWhitespace(contrasena.charAt(i))) {
+                MostrarMensaje("La contraseña no puede contener espacios", "Error", JOptionPane.ERROR_MESSAGE);
+                PassContra.requestFocus();
+                return;
+            }
+        }
+        
+        String simbolos = "!#$/()?-_.,<>|";
+        boolean TieneSimbolo = false;
+        
+        for (int i = 0; i < simbolos.length(); i++) {            
+            if (contrasena.indexOf(simbolos.charAt(i)) >= 0) {
+                TieneSimbolo = true;
+                break;
+            }
+        }
+            
+        if (!TieneSimbolo) {
+            MostrarMensaje("La contraseña tiene que tener como minimo un simbolo", "Error", JOptionPane.ERROR_MESSAGE);
+            PassContra.requestFocus();
+            return;
+        }
+        
+        
+        if (Memoria.ValidarLogin(usuario, contrasena)) {
+            MostrarMensaje("Se ha hecho un login exitosamente", "Login exitoso", JOptionPane.INFORMATION_MESSAGE);
+            menuInicial.onLoginExitoso(usuario);
+            dispose();
+        } else {
+            MostrarMensaje("Ha habido un error en el login, intentelo de nuevo", "Error", JOptionPane.ERROR_MESSAGE);
+            LimpiarCampos();
+        }
+    }
+    
+    private void onSalir() {
+        dispose();
+    }
+    
+    private void EstilizarBoton(JButton boton) {
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        boton.setFont(new Font("DIN Condensed", Font.BOLD, 18));
+        boton.setBackground(new Color(25, 25, 25)); //Gris oscuro tipo metal
+        boton.setForeground(new Color(220, 180, 120)); //Dorado suave
+        boton.setFocusPainted(false);
+        boton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(120, 0, 0), 2), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        boton.setOpaque(true);
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        boton.setPreferredSize(new Dimension(220, 44));
+        
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBackground(new Color(0, 0, 60));
+                boton.setForeground(new Color(255, 220, 130));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(new Color(25, 25, 25));
+                boton.setForeground(new Color(220, 180, 80));
+            }
+        });
+    }
+    
+    private void EstilizarLabel(JLabel label) {
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        label.setFont(new Font("DIN Condensed", Font.BOLD, 22));
+        label.setForeground(Color.WHITE);
+        label.setBackground(new Color(0, 0, 0, 180));
+        label.setOpaque(true);
+        label.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(2, 6, 2, 6), BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(60, 30, 0))));
+    }
+    
+    private void EstilizarCampoTexto(JTextComponent campo) {
+        campo.setFont(new Font("DIN Condensed", Font.BOLD, 18));
+        campo.setBackground(new Color(25, 25, 25));
+        campo.setForeground(Color.WHITE);
+        campo.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(0, 0, 120), 2), BorderFactory.createEmptyBorder(5, 20, 5, 20)));
+        campo.setOpaque(true);
+        campo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        campo.setPreferredSize(new Dimension(220, 44));
+        
+        campo.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                campo.setBackground(new Color(60, 0, 0));
+                campo.setForeground(new Color(255, 220, 130));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                campo.setBackground(new Color(25, 25, 25));
+                campo.setForeground(Color.WHITE);
+            }
+        });
+    }
+    
+    private void MostrarMensaje(String mensaje, String titulo, int tipo) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(new Color(20, 20, 35));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(120, 0, 0), 3), BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+        
+        JLabel lblmensaje = new JLabel("<html><div style='text-align: center; width: 250px;'>" + mensaje.replace("\n", "<br>") + "</div></html>");
+        lblmensaje.setForeground(Color.WHITE);
+        lblmensaje.setFont(new Font("DIN Condensed", Font.BOLD, 16));
+        lblmensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        panel.add(lblmensaje);
+        
+        UIManager.put("OptionPane.background", new Color(20, 20, 35));
+        UIManager.put("Panel.background", new Color(20, 20, 35));
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
+        UIManager.put("Button.background", new Color(25, 25, 25));
+        UIManager.put("Button.foreground", new Color(220, 180, 120));
+        UIManager.put("Button.border", BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(120, 0, 0), 1), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        
+        JOptionPane.showMessageDialog(this, panel, titulo, tipo);
+        
+        UIManager.put("OptionPane.background", null);
+        UIManager.put("Panel.background", null);
+        UIManager.put("OptionPane.messageForeground", null);
+        UIManager.put("Button.background", null);
+        UIManager.put("Button.foreground", null);
+        UIManager.put("Button.border", null);
+    }
+    
+    private int MostrarConfirmacion(String mensaje, String titulo) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(new Color(20, 20, 35));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(120, 0, 0), 3), BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+        
+        JLabel lblmensaje = new JLabel("<html><div style='text-align: center; width: 250px;'>" + mensaje.replace("\n", "<br>") + "</div></html>");
+        lblmensaje.setForeground(Color.WHITE);
+        lblmensaje.setFont(new Font("DIN Condensed", Font.BOLD, 16));
+        lblmensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        panel.add(lblmensaje);
+        
+        UIManager.put("OptionPane.background", new Color(20, 20, 35));
+        UIManager.put("Panel.background", new Color(20, 20, 35));
+        UIManager.put("OptionPane.messageForeground", Color.WHITE);
+        UIManager.put("Button.background", new Color(25, 25, 25));
+        UIManager.put("Button.foreground", new Color(220, 180, 120));
+        UIManager.put("Button.border", BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(120, 0, 0), 1), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        
+        int resultado = JOptionPane.showConfirmDialog(this, panel, titulo, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        
+        UIManager.put("OptionPane.background", null);
+        UIManager.put("Panel.background", null);
+        UIManager.put("OptionPane.messageForeground", null);
+        UIManager.put("Button.background", null);
+        UIManager.put("Button.foreground", null);
+        UIManager.put("Button.border", null);
+        
+        return resultado;
+    }
+}

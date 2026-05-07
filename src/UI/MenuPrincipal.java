@@ -11,8 +11,6 @@ package UI;
  */
 
 import ManejoCuentas.MemoriaCuentas;
-import enums.Dificultad;
-import enums.ModoJuego;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +22,6 @@ public class MenuPrincipal extends JFrame {
     private JLabel LblTitulo;
     
     private JButton BtnJugar;
-    private JButton BtnConfiguracion;
     private JButton BtnReportes;
     private JButton BtnMiPerfil;
     private JButton BtnLogout;
@@ -33,9 +30,6 @@ public class MenuPrincipal extends JFrame {
     private JLabel LblUsuario;
     
     private final MemoriaCuentas Memoria;
-    
-    private Dificultad DificultadActual = Dificultad.NORMAL;
-    private ModoJuego ModoJuegoActual = ModoJuego.TUTORIAL;
 
     public MenuPrincipal(MemoriaCuentas Memoria, String UsuarioActivo) {
         this.Memoria = Memoria;
@@ -45,7 +39,7 @@ public class MenuPrincipal extends JFrame {
             MostrarMensaje("Inicia sesion o crea una cuenta!", "Error", JOptionPane.WARNING_MESSAGE);
             dispose();
             
-            new MenuInicial().setVisible(true);
+            new MenuInicial(Memoria).setVisible(true);
             return;
         }
         
@@ -60,7 +54,7 @@ public class MenuPrincipal extends JFrame {
             }
         };
         
-        setTitle("BATTLESHIP - Menu Principal");
+        setTitle("XIANGQI - Menu Principal");
         this.setContentPane(PanelFondo);
         setSize(800, 600);
         setLocationRelativeTo(null);
@@ -71,7 +65,7 @@ public class MenuPrincipal extends JFrame {
         PanelHeader.setLayout(new BoxLayout(PanelHeader, BoxLayout.Y_AXIS));
         PanelHeader.setOpaque(false);
         
-        LblTitulo = new JLabel("BATTLESHIP") {
+        LblTitulo = new JLabel("XIANGQI") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g.create();
@@ -105,15 +99,10 @@ public class MenuPrincipal extends JFrame {
         PanelBotones.setOpaque(false);
         PanelBotones.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        BtnJugar = new JButton("JUGAR BATTLESHIP");
+        BtnJugar = new JButton("JUGAR XIANGQI");
         BtnJugar.setAlignmentX(Component.CENTER_ALIGNMENT);
         BtnJugar.addActionListener(e -> onJugar());
         EstilizarBoton(BtnJugar);
-
-        BtnConfiguracion = new JButton("CONFIGURACION");
-        BtnConfiguracion.setAlignmentX(Component.CENTER_ALIGNMENT);
-        BtnConfiguracion.addActionListener(e -> AbrirConfiguracion());
-        EstilizarBoton(BtnConfiguracion);
         
         BtnMiPerfil = new JButton("MI PERFIL");
         BtnMiPerfil.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -133,8 +122,6 @@ public class MenuPrincipal extends JFrame {
         PanelBotones.add(Box.createVerticalStrut(70));
         PanelBotones.add(BtnJugar);
         PanelBotones.add(Box.createVerticalStrut(14));
-        PanelBotones.add(BtnConfiguracion);
-        PanelBotones.add(Box.createVerticalStrut(14));
         PanelBotones.add(BtnMiPerfil);
         PanelBotones.add(Box.createVerticalStrut(14));
         PanelBotones.add(BtnReportes);
@@ -148,7 +135,6 @@ public class MenuPrincipal extends JFrame {
         
         LblUsuario = new JLabel("Usuario: " + this.UsuarioActivo);
         LblUsuario.setForeground(Color.WHITE);
-        LblUsuario.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         LblUsuario.setFont(new Font("Bookman Old Style", Font.PLAIN, 16));
         LblUsuario.setBorder(BorderFactory.createEmptyBorder(0, 12, 8, 0));
         
@@ -172,24 +158,19 @@ public class MenuPrincipal extends JFrame {
         
         String[] activos = (Memoria != null) ? Memoria.getUsuariosActivos(): new String[0];
         
-        if (activos.length < 2) {
-            MostrarMensaje("Necesitas como minimo 2 jugadores para poder iniciar el juego!", "Insuficientes Jugadores", JOptionPane.WARNING_MESSAGE);
-            return;
+        int rivales = 0;
+        
+        for (String act : activos) {
+            if (act != null && !act.equalsIgnoreCase(UsuarioActivo))
+                rivales++;
         }
         
-        int cuenta = 0;
-        
-        for (int i = 0; i < activos.length; i++) {
-            if (activos[i] != null && !activos[i].equalsIgnoreCase(UsuarioActivo))
-                cuenta++;
-        }
-        
-        if (cuenta == 0) {
-            MostrarMensaje("No hay oponentes conectados actualmente", "Sin Rivales", JOptionPane.WARNING_MESSAGE);
+        if (rivales == 0) {
+            MostrarMensaje("Necesitas el menos otro jugador registrado para jugar", "Sin Rivales", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        PanelJuego juego = new PanelJuego(Memoria, UsuarioActivo, this, getDificultadActual(), getModoJuegoActual());
+        PanelJuego juego = new PanelJuego(Memoria, UsuarioActivo, this);
 
         if (juego.isInicializacionExitosa()) {
             juego.setVisible(true);
@@ -199,15 +180,6 @@ public class MenuPrincipal extends JFrame {
         }
     }
     
-    private void AbrirConfiguracion() {
-        if (UsuarioActivo == null || UsuarioActivo.isBlank()) {
-            MostrarMensaje("Primero inicia sesion o crea una cuenta!", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        new Configuracion(Memoria, UsuarioActivo, this).setVisible(true);
-        this.dispose();
-    }
     private void AbrirMiCuenta() {
         if (UsuarioActivo == null || UsuarioActivo.isBlank()) {
             MostrarMensaje("Primero inicia sesion o crea una cuenta!", "Aviso", JOptionPane.WARNING_MESSAGE);
@@ -282,22 +254,6 @@ public class MenuPrincipal extends JFrame {
         titulo.setForeground(Color.WHITE);
         titulo.setOpaque(false);
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
-    }
-
-    public void setDificultadActual(Dificultad DificultadActual) {
-        this.DificultadActual = DificultadActual;
-    }
-
-    public void setModoJuegoActual(ModoJuego ModoJuegoActual) {
-        this.ModoJuegoActual = ModoJuegoActual;
-    }
-
-    public Dificultad getDificultadActual() {
-        return DificultadActual;
-    }
-
-    public ModoJuego getModoJuegoActual() {
-        return ModoJuegoActual;
     }
     
     private void MostrarMensaje(String mensaje, String titulo, int tipo) {

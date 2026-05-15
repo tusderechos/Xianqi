@@ -12,7 +12,7 @@ package LogicaJuego;
 import enums.ColorPieza;
 import enums.TipoPieza;
 
-public class General extends Pieza {
+public class General extends PiezaConfinada {
     
     public General(ColorPieza Color, int Fila, int Col) {
         super(Color, TipoPieza.GENERAL, Fila, Col);
@@ -30,14 +30,6 @@ public class General extends Pieza {
         
         //Un paso ortogonal
         return (df == 1 && dc == 0) || (df == 0 && dc == 1);
-    }
-    
-    private boolean DentrodelPalacio(int fila, int col) {
-        if (col < 3 || col > 5) {
-            return false;
-        }
-        
-        return Color == ColorPieza.ROJO ? (fila >= 7 && fila <= 9) : (fila >= 0 && fila <= 2);
     }
     
     @Override

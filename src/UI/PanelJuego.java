@@ -22,6 +22,8 @@ import LogicaJuego.Pieza;
 import enums.UIColors;
 import enums.ColorPieza;
 import enums.ResultadoMovimiento;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class PanelJuego extends JFrame {
     
@@ -560,13 +562,28 @@ public class PanelJuego extends JFrame {
             menuPrincipal.setVisible(true);
     }
     
-    private void EstilizarBoton(JComponent compo) {
-        compo.setFont(new Font("SansSerif", Font.BOLD, 14));
-        compo.setBackground(UIColors.FONDO_PANEL.getColor());
-        compo.setForeground(UIColors.TEXTO_HEADER.getColor());
-        compo.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UIColors.TEXTO_HEADER.getColor(), 1), BorderFactory.createEmptyBorder(6, 16, 6, 16)));
-        compo.setOpaque(true);
-        compo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    private void EstilizarBoton(JComponent boton) {
+        boton.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
+        boton.setBackground(new Color(80, 45, 10));
+        boton.setForeground(new Color(230, 190, 100));
+        boton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 2), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        boton.setOpaque(true);
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        boton.setPreferredSize(new Dimension(220, 44));
+        
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBackground(new Color(120, 75, 20));
+                boton.setForeground(new Color(255, 220, 130));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(new Color(80, 45, 10));
+                boton.setForeground(new Color(230, 190, 100));
+            }
+        });
     }
     
     private void MostrarMensaje(String msg, String titulo, int tipo) {

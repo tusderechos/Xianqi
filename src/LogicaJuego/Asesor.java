@@ -12,7 +12,7 @@ package LogicaJuego;
 import enums.ColorPieza;
 import enums.TipoPieza;
 
-public class Asesor extends Pieza {
+public class Asesor extends PiezaConfinada {
     
     public Asesor(ColorPieza Color, int Fila, int Col) {
         super(Color, TipoPieza.ASESOR, Fila, Col);
@@ -29,12 +29,6 @@ public class Asesor extends Pieza {
         int dc = Math.abs(cdestino - Col);
         
         return df == 1 && dc == 1;
-    }
-    
-    private boolean DentrodelPalacio(int fila, int col) {
-        if (col < 3 || col > 5)
-            return false;
-        return Color == ColorPieza.ROJO ? (fila >= 7 && fila <= 9) : (fila >= 0 && fila <= 2);
     }
     
     @Override

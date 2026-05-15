@@ -406,27 +406,26 @@ public class Reportes extends JFrame {
     }
     
     private void EstilizarBoton(JButton boton) {
-        boton.setFont(new Font("DIN Condensed", Font.BOLD, 18));
-        boton.setBackground(new Color(25, 25, 25)); //Gris oscuro tipo metal
-        boton.setForeground(new Color(220, 180, 120)); //Dorado suave
+        boton.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
+        boton.setBackground(new Color(80, 45, 10));
+        boton.setForeground(new Color(230, 190, 100));
         boton.setFocusPainted(false);
-        boton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(120, 0, 0), 2), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        boton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 2), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
         boton.setOpaque(true);
         boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         boton.setPreferredSize(new Dimension(220, 44));
         
-        //Mi querido, hermoso y celestial efecto hover
         boton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                boton.setBackground(new Color(0, 0, 60));
+                boton.setBackground(new Color(120, 75, 20));
                 boton.setForeground(new Color(255, 220, 130));
             }
             
             @Override
             public void mouseExited(MouseEvent e) {
-                boton.setBackground(new Color(25, 25, 25));
-                boton.setForeground(new Color(220, 180, 80));
+                boton.setBackground(new Color(80, 45, 10));
+                boton.setForeground(new Color(230, 190, 100));
             }
         });
     }

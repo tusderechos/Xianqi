@@ -48,6 +48,6 @@ public class Soldado extends Pieza {
     
     @Override
     public String getSimbolo() {
-        return Color == ColorPieza.ROJO ? "帥" : "將";
+        return Color == ColorPieza.ROJO ? "SR" : "SN";
     }
 }

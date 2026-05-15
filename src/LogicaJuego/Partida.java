@@ -83,14 +83,13 @@ public class Partida {
     public String getGanador() {
         if (Activa || ResultadoFinal == null)
             return null;
-        return getJugadorEsperando().equals(Jugador1) ? Jugador1 : Jugador2;
+        return Turno == ColorPieza.ROJO ? Jugador1 : Jugador2;
     }
     
     public String getPerdedor() {
         if (Activa || ResultadoFinal == null)
             return null;
         
-        String ganador = getGanador();
-        return ganador.equals(Jugador1) ? Jugador2 : Jugador1;
+        return Turno == ColorPieza.ROJO ? Jugador2 : Jugador1;
     }
 }

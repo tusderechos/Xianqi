@@ -44,7 +44,7 @@ public class IniciarSesion extends JDialog {
             }
         };
         
-        setTitle("BATTLESHIP - Iniciar Sesion");
+        setTitle("XIANGQI - Iniciar Sesion");
         setContentPane(PanelFondo);
         setSize(700, 700);
         setResizable(false);

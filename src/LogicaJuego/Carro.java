@@ -38,6 +38,6 @@ public class Carro extends Pieza {
     
     @Override
     public String getSimbolo() {
-        return Color == ColorPieza.ROJO ? "炮" : "砲";
+        return Color == ColorPieza.ROJO ? "CR" : "CN";
     }
 }

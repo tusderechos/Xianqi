@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ArrayList;
 
 import ManejoCuentas.MemoriaCuentas;
 import LogicaJuego.LogicaXiangqi;
@@ -30,6 +31,11 @@ public class PanelJuego extends JFrame {
     
     private LogicaXiangqi Juego;
     
+    private JPanel PanelCapturaArriba;
+    private JPanel PanelCapturaAbajo;
+    private JLabel LblNombreArriba;
+    private JLabel LblNombreAbajo;
+    
     private JLabel LblTurno;
     private JLabel LblInfo;
     private JButton[][] BtnTablero;
@@ -39,6 +45,10 @@ public class PanelJuego extends JFrame {
     private boolean HaySeleccion = false;
     
     private boolean InicializacionExitosa = false;
+    
+    private ImageIcon[] CacheImagenes = new ImageIcon[14];
+    private String[] CacheKeys = new String[14];
+    private int CacheTamano = 0;
     
     public PanelJuego(MemoriaCuentas Memoria, String UsuarioActivo, MenuPrincipal menuPrincipal) {
         this.Memoria = Memoria;
@@ -50,14 +60,8 @@ public class PanelJuego extends JFrame {
             return;
         }
         
-        String jugador2 = PedirJugador2();
-        if (jugador2 == null)
-            return;
-        
-        Juego = new LogicaXiangqi(UsuarioActivo, jugador2);
-        
         setTitle("XIANGQI");
-        setSize(720, 900);
+        setSize(1000, 820);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(menuPrincipal);
@@ -132,11 +136,21 @@ public class PanelJuego extends JFrame {
         
         JButton btnretirar = new JButton("RETIRAR");
         EstilizarBoton(btnretirar);
+        btnretirar.addActionListener(e -> onRetirar());
         
         barrainferior.add(btnretirar);
         PanelFondo.add(barrainferior, BorderLayout.SOUTH);
         
+        PanelFondo.add(CrearPanelCapturas(), BorderLayout.EAST);
+        
+        String jugador2 = PedirJugador2();
+        if (jugador2 == null)
+            return;
+        
+        Juego = new LogicaXiangqi(UsuarioActivo, jugador2);
+        
         RenderizarTablero();
+        InicializacionExitosa = true;
     }
     
     private void RenderizarTablero() {
@@ -152,26 +166,172 @@ public class PanelJuego extends JFrame {
                     boton.setBackground(UIColors.CELDA_SELECCION.getColor());
                 } else if (HaySeleccion && esDestinoValido(fila, col)) {
                     boton.setBackground(UIColors.CELDA_DESTINO.getColor());
+                } else if (esCeldaPalacio(fila, col)) {
+                    boton.setBackground(UIColors.FONDO_PALACIO.getColor());
+                } else if (esCeldaRio(fila, col)) {
+                    boton.setBackground(UIColors.FONDO_RIO.getColor());
                 } else {
                     boton.setBackground(UIColors.FONDO_TABLERO.getColor());
                 }
                 
-                //Lo del rio
-                if (fila == 4 || fila == 5) {
-                    boton.setBorder(BorderFactory.createMatteBorder(fila == 4 ? 1 : 2, 1, fila == 4 ? 2 : 1, 1, new Color(40, 80, 160, 120)));
-                } else {
-                    boton.setBorder(BorderFactory.createLineBorder(UIColors.LINEAS.getColor(), 1));
-                }
+                boton.setBorder(BorderFactory.createLineBorder(UIColors.LINEAS.getColor(), 1));
                 
                 if (pieza == null) {
                     boton.setText("");
+                    boton.setIcon(null);
                     continue;
                 }
                 
-                boton.setText(pieza.getSimbolo());
-                boton.setForeground(pieza.getColor() == ColorPieza.ROJO ? UIColors.TEXTO_PIEZA_ROJO.getColor() : UIColors.TEXTO_PIEZA_ROJO.getColor());
+                ImageIcon icono = CargarImagenPieza(pieza);
+                
+                if (icono != null) {
+                    boton.setIcon(icono);
+                    boton.setText("");
+                } else {
+                    //Fallback al texto si es que no carga la imagen
+                    boton.setIcon(null);
+                    boton.setText(pieza.getSimbolo());
+                    boton.setForeground(pieza.getColor() == ColorPieza.ROJO ? UIColors.TEXTO_PIEZA_ROJO.getColor() : UIColors.TEXTO_PIEZA_NEGRA.getColor());
+                }
             }
         }
+        
+        DibujarPalacio();
+        ActualizarCapturas();
+    }
+    
+    private JPanel CrearPanelCapturas() {
+        JPanel panellateral = new JPanel();
+        panellateral.setLayout(new BoxLayout(panellateral, BoxLayout.Y_AXIS));
+        panellateral.setBackground(UIColors.HEADER_BG.getColor());
+        panellateral.setPreferredSize(new Dimension(150, 0));
+        panellateral.setBorder(BorderFactory.createEmptyBorder(8, 6, 8, 6));
+        
+        LblNombreArriba = new JLabel("", SwingConstants.CENTER);
+        LblNombreArriba.setForeground(new Color(180, 180, 255));
+        LblNombreArriba.setFont(new Font("SansSerif", Font.BOLD, 11));
+        LblNombreArriba.setAlignmentX(Component.CENTER_ALIGNMENT);
+        LblNombreArriba.setMaximumSize(new Dimension(150, 20));
+        
+        PanelCapturaArriba = new JPanel(new GridLayout(5, 3, 2, 2));
+        PanelCapturaArriba.setBackground(new Color(30, 20, 10));
+        PanelCapturaArriba.setMaximumSize(new Dimension(150, 280));
+        PanelCapturaArriba.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(100, 80, 40), 1), BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+        
+        JLabel lblseparador = new JLabel("-- vs --", SwingConstants.CENTER);
+        lblseparador.setForeground(new Color(180, 150, 80));
+        lblseparador.setFont(new Font("SansSerif", Font.BOLD, 12));
+        lblseparador.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblseparador.setMaximumSize(new Dimension(150, 30));
+        
+        LblNombreAbajo = new JLabel("", SwingConstants.CENTER);
+        LblNombreAbajo.setForeground(UIColors.TEXTO_PIEZA_ROJO.getColor());
+        LblNombreAbajo.setFont(new Font("SansSerif", Font.BOLD, 11));
+        LblNombreAbajo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        LblNombreAbajo.setMaximumSize(new Dimension(150, 20));
+        
+        PanelCapturaAbajo = new JPanel(new GridLayout(5, 3, 2, 2));
+        PanelCapturaAbajo.setBackground(new Color(30, 20, 10));
+        PanelCapturaAbajo.setMaximumSize(new Dimension(150, 280));
+        PanelCapturaAbajo.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(100, 80, 40), 1), BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+        
+        panellateral.add(Box.createVerticalStrut(10));
+        panellateral.add(LblNombreArriba);
+        panellateral.add(Box.createVerticalStrut(6));
+        panellateral.add(PanelCapturaArriba);
+        panellateral.add(Box.createVerticalGlue());
+        panellateral.add(lblseparador);
+        panellateral.add(Box.createVerticalGlue());
+        panellateral.add(PanelCapturaAbajo);
+        panellateral.add(Box.createVerticalStrut(6));
+        panellateral.add(LblNombreAbajo);
+        panellateral.add(Box.createVerticalStrut(10));
+        
+        return panellateral;
+    }
+    
+    private void ActualizarCapturas() {
+        Partida partida = Juego.getPartida();
+        ColorPieza coloractivo = partida.getColorJugador(UsuarioActivo);
+        
+        ArrayList<Pieza> capturaarriba = coloractivo == ColorPieza.ROJO ? Juego.getCapturasNegro() : Juego.getCapturasRojo();
+        ArrayList<Pieza> capturaabajo = coloractivo == ColorPieza.ROJO ? Juego.getCapturasRojo() : Juego.getCapturasNegro();
+        String rival = coloractivo == ColorPieza.ROJO ? partida.getJugador2() : partida.getJugador1();
+        
+        LblNombreArriba.setText(rival + " capturo: ");
+        LblNombreAbajo.setText(UsuarioActivo + " capturo: ");
+        
+        RefrescarPanelCaptura(PanelCapturaArriba, capturaarriba);
+        RefrescarPanelCaptura(PanelCapturaAbajo, capturaabajo);
+    }
+    
+    private void RefrescarPanelCaptura(JPanel panel, ArrayList<Pieza> capturas) {
+        panel.removeAll();
+        
+        for (int i = 0; i < 15; i++) {
+            JLabel lbl = new JLabel("", SwingConstants.CENTER);
+            lbl.setOpaque(true);
+            lbl.setBackground(new Color(50, 35, 15));
+            lbl.setBorder(BorderFactory.createLineBorder(new Color(80, 60, 30), 1));
+            lbl.setPreferredSize(new Dimension(36, 36));
+            
+            if (i < capturas.size()) {
+                Pieza pieza = capturas.get(i);
+                lbl.setText(pieza.getSimbolo());
+                lbl.setFont(new Font("Serif", Font.BOLD, 13));
+                lbl.setForeground(pieza.getColor() == ColorPieza.ROJO ? UIColors.TEXTO_PIEZA_ROJO.getColor() : UIColors.TEXTO_PIEZA_NEGRA.getColor());
+            }
+            
+            panel.add(lbl);
+        }
+        
+        panel.revalidate();
+        panel.repaint();
+    }
+    
+    private boolean esCeldaPalacio(int fila, int col) {
+        if (col < 3 || col > 5)
+            return false;
+        return (fila >= 0 && fila <= 2) || (fila >= 7 && fila <= 9);
+    }
+    
+    private boolean esCeldaRio(int fila, int col) {
+        return fila == 4 || fila == 5;
+    }
+    
+    private void DibujarPalacio() {
+        //Pinta las dos diagonales del palacio encima de los botones existentes
+        PintarDiagonalPalacio(0, 7);
+    }
+    
+    private void PintarDiagonalPalacio(int filainiciopalacionegro, int filainiciopalaciorojo) {
+        int[][] palacios = {{filainiciopalacionegro, filainiciopalacionegro + 2}, {filainiciopalaciorojo, filainiciopalaciorojo + 2}};
+        
+        for (int[] rango : palacios) {
+            int finicio = rango[0];
+            int ffin = rango[1];
+            
+            //Diagonal \
+            for (int i = 0; i <= 2; i++) {
+                MarcarDiagonal(finicio + i, 3 + i);
+            }
+            
+            //Diagonal /
+            for (int i = 0; i <= 2; i++) {
+                MarcarDiagonal(finicio + i, 5 - i);
+            }
+        }
+    }
+    
+    private void MarcarDiagonal(int fila, int col) {
+        JButton boton = BtnTablero[fila][col];
+        
+        if (HaySeleccion && fila == FilaSeleccionada && col == ColSeleccionada)
+            return;
+        if (HaySeleccion && esDestinoValido(fila, col))
+            return;
+        
+        boton.setBackground(UIColors.FONDO_PALACIO_DIAGONAL.getColor());
     }
     
     private boolean esDestinoValido(int fdestino, int cdestino) {
@@ -366,6 +526,31 @@ public class PanelJuego extends JFrame {
         }
         
         return (String) combo.getSelectedItem();
+    }
+    
+    private ImageIcon CargarImagenPieza(Pieza pieza) {
+        String llave = pieza.getNOmbreImaen();
+        
+        for (int i = 0; i < CacheTamano; i++) {
+            if (CacheKeys[i].equals(llave))
+                return CacheImagenes[i];
+        }
+        
+        try {
+            ImageIcon icono = new ImageIcon(getClass().getResource("/images" + llave));
+            Image imagen = icono.getImage().getScaledInstance(52, 52, Image.SCALE_SMOOTH);
+            ImageIcon escalado = new ImageIcon(imagen);
+            
+            if (CacheTamano < 14) {
+                CacheKeys[CacheTamano] = llave;
+                CacheImagenes[CacheTamano] = escalado;
+                CacheTamano++;
+            }
+            
+            return escalado;
+        } catch (Exception e) {
+            return null;
+        }
     }
     
     private void Volver() {

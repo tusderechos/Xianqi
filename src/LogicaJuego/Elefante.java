@@ -20,8 +20,6 @@ public class Elefante extends Pieza {
     
     @Override
     public boolean esMovimientoValido(int fdestino, int cdestino, Pieza[][] tablero) {
-        if (esMismoColor(tablero[fdestino][cdestino]))
-            return false;
         if (!DentrodelTablero(fdestino, cdestino))
             return false;
         if (CruzaelRio(fdestino))
@@ -37,6 +35,12 @@ public class Elefante extends Pieza {
         int ojof = Fila + df / 2;
         int ojoc = Col + dc / 2;
         
+        if (!DentrodelTablero(ojof, ojoc))
+            return false;
+        
+        if (esMismoColor(tablero[fdestino][cdestino])) 
+            return false;
+        
         return tablero[ojof][ojoc] == null;
     }
     
@@ -46,6 +50,6 @@ public class Elefante extends Pieza {
     
     @Override
     public String getSimbolo() {
-        return Color == ColorPieza.ROJO ? "相" : "象";
+        return Color == ColorPieza.ROJO ? "ER" : "EN";
     }
 }

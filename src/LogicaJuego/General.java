@@ -37,12 +37,12 @@ public class General extends Pieza {
             return false;
         }
         
-        return Color == ColorPieza.ROJO ? (fila <= 7 && fila <= 9) : (fila >= 0 && fila <= 2);
+        return Color == ColorPieza.ROJO ? (fila >= 7 && fila <= 9) : (fila >= 0 && fila <= 2);
     }
     
     @Override
     public final String getSimbolo() {
-        return Color == ColorPieza.ROJO ? "S" : "A";
+        return Color == ColorPieza.ROJO ? "GR" : "GN";
     }
     
     @Override

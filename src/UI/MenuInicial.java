@@ -40,7 +40,7 @@ public class MenuInicial extends JFrame {
             }
         };
         
-        setTitle("BATTLESHIP");
+        setTitle("XIANGQI");
         this.setContentPane(PanelFondo);
         setSize(800, 600);
         setLocationRelativeTo(null);

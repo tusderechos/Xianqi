@@ -54,7 +54,7 @@ public class Reportes extends JFrame {
             }
         };
         
-        setTitle("BATTLESHIP - Reportes");
+        setTitle("XIANGQI - Reportes");
         this.setContentPane(PanelFondo);
         setSize(800, 700);
         setResizable(false);

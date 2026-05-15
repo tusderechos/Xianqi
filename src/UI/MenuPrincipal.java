@@ -175,8 +175,10 @@ public class MenuPrincipal extends JFrame {
         if (juego.isInicializacionExitosa()) {
             juego.setVisible(true);
             setVisible(false);
+            System.out.println("Estoy abriendo el panel del juego");
         } else {
             juego.dispose();
+            System.out.println("No pude abrir el panel del juego");
         }
     }
     

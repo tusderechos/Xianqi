@@ -28,11 +28,11 @@ public class Caballo extends Pieza {
         int dc = cdestino - Col;
         
         //Movimiento asi de L como en ajedrez normal
-        if (Math.abs(df) == 2 && Math.abs(dc) == 2) {
+        if (Math.abs(df) == 2 && Math.abs(dc) == 1) {
             //Se verifica si existe un bloqueo si el paso ortogonal es vertical
             return tablero[Fila + df / 2][Col] == null;
         }
-        if (Math.abs(df) == 2 && Math.abs(dc) == 2) {
+        if (Math.abs(df) == 1 && Math.abs(dc) == 2) {
             //Lo mismo de arriba pero en vez de vertical es horizontal
             return tablero[Fila][Col + dc / 2] == null;
         }
@@ -42,6 +42,6 @@ public class Caballo extends Pieza {
     
     @Override
     public String getSimbolo() {
-        return Color == ColorPieza.ROJO ? "俥" : "車";
+        return Color == ColorPieza.ROJO ? "CBR" : "CBN";
     }
 }

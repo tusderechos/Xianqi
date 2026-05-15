@@ -54,7 +54,7 @@ public class MiPerfil extends JFrame {
             }
         };
         
-        setTitle("BATTLESHIP - Mi Perfil");
+        setTitle("XIANGQI - Mi Perfil");
         this.setContentPane(PanelFondo);
         setSize(800, 700);
         setResizable(false);

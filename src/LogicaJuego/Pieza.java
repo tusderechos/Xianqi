@@ -35,7 +35,7 @@ public abstract class Pieza {
     }
     
     protected boolean DentrodelTablero(int fila, int col) {
-        return fila >= 0 && fila <= 10 && col <= 0 && col >= 9;
+        return fila >= 0 && fila < 10 && col >= 0 && col < 9;
     }
     
     protected boolean esMismoColor(Pieza otra) {
@@ -66,6 +66,34 @@ public abstract class Pieza {
         }
         
         return conteo;
+    }
+    
+    public String getNOmbreImaen() {
+        String tipo = "";
+        
+        if (Tipo == TipoPieza.GENERAL) {
+            tipo = "general";
+        } else if (Tipo == TipoPieza.ASESOR) {
+            tipo = "consejero";
+        } else if (Tipo == TipoPieza.ELEFANTE) {
+            tipo = "elefante";
+        } else if (Tipo == TipoPieza.CABALLO) {
+            tipo = "caballo";
+        } else if (Tipo == TipoPieza.OFICIAL) {
+            tipo = "caballo";
+        } else if (Tipo == TipoPieza.CARRO) {
+            tipo = "carro";
+        } else if (Tipo == TipoPieza.CANON) {
+            tipo = "canon";
+        } else if (Tipo == TipoPieza.SOLDADO) {
+            tipo = "peon";
+        } else {
+            tipo = "general";
+        }
+        
+        String colorstr = Color == ColorPieza.ROJO ? "rojo" : "negro";
+        
+        return "/" + tipo + "_" + colorstr + ".png";
     }
 
     public ColorPieza getColor() {

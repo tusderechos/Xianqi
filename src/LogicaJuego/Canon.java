@@ -25,7 +25,7 @@ public class Canon extends Pieza {
             return false;
         
         boolean eslinea = Fila == fdestino || Col == cdestino;
-        if (eslinea)
+        if (!eslinea)
             return false;
         
         Pieza destino = tablero[fdestino][cdestino];
@@ -42,6 +42,6 @@ public class Canon extends Pieza {
     
     @Override
     public String getSimbolo() {
-        return Color == ColorPieza.ROJO ? "兵" : "卒";
+        return Color == ColorPieza.ROJO ? "CNR" : "CNN";
     }
 }

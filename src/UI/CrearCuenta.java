@@ -56,7 +56,7 @@ public class CrearCuenta extends JDialog {
             }
         };
         
-        setTitle("BATTLESHIP - Crear Cuenta");
+        setTitle("XIANGQI - Crear Cuenta");
         setContentPane(PanelFondo);
         setSize(750, 700);
         setResizable(false);

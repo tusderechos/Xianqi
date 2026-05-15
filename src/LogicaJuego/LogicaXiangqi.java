@@ -10,15 +10,22 @@ package LogicaJuego;
  */
 
 import enums.*;
+import java.util.ArrayList;
 
 public class LogicaXiangqi {
     
     private Pieza[][] Tablero;
     private Partida partida;
     
+    private ArrayList<Pieza> CapturasRojo;
+    private ArrayList<Pieza> CapturasNegro;
+    
     public LogicaXiangqi(String Jugador1, String Jugador2) {
         this.Tablero = new Pieza[10][9];
         this.partida = new Partida(Jugador1, Jugador2);
+        
+        CapturasRojo = new ArrayList<>();
+        CapturasNegro = new ArrayList<>();
         
         //Creacion y posicionamiento de piezas
         
@@ -32,8 +39,10 @@ public class LogicaXiangqi {
         Tablero[0][6] = new Elefante(ColorPieza.NEGRO, 0, 6);
         Tablero[0][7] = new Caballo(ColorPieza.NEGRO, 0, 7);
         Tablero[0][8] = new Carro(ColorPieza.NEGRO, 0, 8);
+        
         Tablero[2][1] = new Canon(ColorPieza.NEGRO, 2, 1);
         Tablero[2][7] = new Canon(ColorPieza.NEGRO, 2, 7);
+        
         Tablero[3][0] = new Soldado(ColorPieza.NEGRO, 3, 0);
         Tablero[3][2] = new Soldado(ColorPieza.NEGRO, 3, 2);
         Tablero[3][4] = new Soldado(ColorPieza.NEGRO, 3, 4);
@@ -50,8 +59,10 @@ public class LogicaXiangqi {
         Tablero[9][6] = new Elefante(ColorPieza.ROJO, 9, 6);
         Tablero[9][7] = new Caballo(ColorPieza.ROJO, 9, 7);
         Tablero[9][8] = new Carro(ColorPieza.ROJO, 9, 8);
+        
         Tablero[7][1] = new Canon(ColorPieza.ROJO, 7, 1);
         Tablero[7][7] = new Canon(ColorPieza.ROJO, 7, 7);
+        
         Tablero[6][0] = new Soldado(ColorPieza.ROJO, 6, 0);
         Tablero[6][2] = new Soldado(ColorPieza.ROJO, 6, 2);
         Tablero[6][4] = new Soldado(ColorPieza.ROJO, 6, 4);
@@ -85,9 +96,17 @@ public class LogicaXiangqi {
         pieza.setFila(fdestino);
         pieza.setCol(cdestino);
         
-        if (capturada != null && capturada.getTipo() == TipoPieza.GENERAL) {
-            partida.TerminarPorCaptura();
-            return ResultadoMovimiento.GANO;
+        if (capturada != null) {
+            if (capturada.getColor() == ColorPieza.NEGRO) {
+                CapturasRojo.add(capturada);
+            } else {
+                CapturasNegro.add(capturada);
+            }
+            
+            if (capturada.getTipo() == TipoPieza.GENERAL) {
+                partida.TerminarPorCaptura();
+                return ResultadoMovimiento.GANO;
+            }
         }
         
         partida.CambiarTurno();
@@ -159,4 +178,13 @@ public class LogicaXiangqi {
     public String getPerdedor() {
         return partida.getPerdedor();
     }
+
+    public ArrayList<Pieza> getCapturasRojo() {
+        return CapturasRojo;
+    }
+
+    public ArrayList<Pieza> getCapturasNegro() {
+        return CapturasNegro;
+    }
+    
 }

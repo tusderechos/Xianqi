@@ -53,7 +53,7 @@ public class IniciarSesion extends JDialog {
         
         JPanel PanelInfo = new JPanel();
         PanelInfo.setLayout(new BoxLayout(PanelInfo, BoxLayout.Y_AXIS));
-        PanelInfo.setBorder(BorderFactory.createEmptyBorder(100, 15, 0, 0));
+        PanelInfo.setBorder(BorderFactory.createEmptyBorder(60, 40, 0, 40));
         PanelInfo.setOpaque(false);
         
         LblUsuario = new JLabel("Usuario");
@@ -204,33 +204,32 @@ public class IniciarSesion extends JDialog {
     
     private void EstilizarLabel(JLabel label) {
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
-        label.setFont(new Font("DIN Condensed", Font.BOLD, 22));
-        label.setForeground(Color.WHITE);
-        label.setBackground(new Color(0, 0, 0, 180));
+        label.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
+        label.setForeground(new Color(230, 190, 100));
         label.setOpaque(true);
-        label.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(2, 6, 2, 6), BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(60, 30, 0))));
+        label.setBackground(new Color(38, 20, 6, 200));
+        label.setBorder(BorderFactory.createEmptyBorder(10, 2, 4, 0));
     }
     
     private void EstilizarCampoTexto(JTextComponent campo) {
-        campo.setFont(new Font("DIN Condensed", Font.BOLD, 18));
-        campo.setBackground(new Color(25, 25, 25));
-        campo.setForeground(Color.WHITE);
-        campo.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(0, 0, 120), 2), BorderFactory.createEmptyBorder(5, 20, 5, 20)));
+        campo.setFont(new Font("Palatino linotype", Font.BOLD, 15));
+        campo.setBackground(new Color(58, 34, 12));
+        campo.setForeground(new Color(230, 190, 100));
+        campo.setCaretColor(new Color(230, 190, 100));
+        campo.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 2), BorderFactory.createEmptyBorder(6, 12, 6, 12)));
         campo.setOpaque(true);
-        campo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        campo.setPreferredSize(new Dimension(220, 44));
+        campo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        campo.setMaximumSize(new Dimension(280, 40));
         
         campo.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                campo.setBackground(new Color(60, 0, 0));
-                campo.setForeground(new Color(255, 220, 130));
+                campo.setBackground(new Color(80, 45, 10));
             }
             
             @Override
             public void mouseExited(MouseEvent e) {
-                campo.setBackground(new Color(25, 25, 25));
-                campo.setForeground(Color.WHITE);
+                campo.setBackground(new Color(58, 34, 12));
             }
         });
     }

@@ -41,7 +41,7 @@ public class ModificarDatos extends JDialog {
         String usuario = menuPrincipal.getUsuarioActivo();
         this.Indice = Memoria.getIndiceUsuario(usuario);
         
-        setSize(620, 520);
+        setSize(620, 680);
         setResizable(false);
         setLocationRelativeTo(padre);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -75,14 +75,11 @@ public class ModificarDatos extends JDialog {
         PanelFondo.add(PanelCentral, BorderLayout.CENTER);
         
         JPanel PanelForm = new JPanel();
-        PanelForm.setLayout(new GridBagLayout());
+        PanelForm.setLayout(new BoxLayout(PanelForm, BoxLayout.Y_AXIS));
         PanelForm.setOpaque(false);
+        PanelForm.setBorder(BorderFactory.createEmptyBorder(40, 50, 20, 50));
         
         PanelFondo.add(PanelForm, BorderLayout.CENTER);
-        
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(6, 6, 6, 6);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         
         JTextField TxtUsuarioActivo = new JTextField(UsuarioActivo);
         TxtUsuarioActivo.setEnabled(false);
@@ -100,36 +97,35 @@ public class ModificarDatos extends JDialog {
         TxtPassConfirm = new JPasswordField();
         EstilizarCampoTexto(TxtPassConfirm);
         
-        AnadirFila(PanelForm, gbc, 0, "Usuario Actual:", TxtUsuarioActivo);
-        AnadirFila(PanelForm, gbc, 1, "Nuevo Usuario:", TxtNuevoUsuario);
+        AnadirFila(PanelForm, "Usuario Actual:", TxtUsuarioActivo);
+        AnadirFila(PanelForm, "Nuevo Usuario:", TxtNuevoUsuario);
         
         JSeparator separador = new JSeparator();
-        separador.setForeground(new Color(120, 120, 120));
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
+        separador.setForeground(new Color(160, 110, 40));
+        separador.setMaximumSize(new Dimension(Integer.MAX_VALUE, 2));
         
-        PanelForm.add(separador, gbc);
+        PanelForm.add(Box.createVerticalStrut(8));
+        PanelForm.add(separador);
+        PanelForm.add(Box.createVerticalStrut(8));
         
-        AnadirFila(PanelForm, gbc, 3, "Contrasena Actual (Obligatoria):", TxtPassActual);
-        AnadirFila(PanelForm, gbc, 4, "Nueva Contraseña (Opcional):", TxtPassNueva);
-        AnadirFila(PanelForm, gbc, 5, "Confirmar Nueva Contraseña (Opcional):", TxtPassConfirm);
+        AnadirFila(PanelForm, "Contrasena Actual (Obligatoria):", TxtPassActual);
+        AnadirFila(PanelForm, "Nueva Contraseña (Opcional):", TxtPassNueva);
+        AnadirFila(PanelForm, "Confirmar Nueva Contraseña (Opcional):", TxtPassConfirm);
         
         LblMensaje = new JLabel(" ");
-        EstilizarLabel(LblMensaje);
+        LblMensaje.setFont(new Font("Palatino Linotype", Font.ITALIC, 13));
+        LblMensaje.setForeground(new Color(220, 120, 80));
+        LblMensaje.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.gridwidth = 2;
-        
-        PanelForm.add(LblMensaje, gbc);
+        PanelForm.add(Box.createVerticalStrut(6));
+        PanelForm.add(LblMensaje);
         
         JPanel PanelBotones = new JPanel();
-        PanelBotones.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        PanelBotones.setLayout(new BoxLayout(PanelBotones, BoxLayout.X_AXIS));
         PanelBotones.setOpaque(false);
-        
-        PanelFondo.add(PanelBotones, BorderLayout.SOUTH);
-        
+        PanelBotones.setAlignmentX(Component.LEFT_ALIGNMENT);
+        PanelBotones.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+                
         JButton BtnGuardar = new JButton("GUARDAR");
         EstilizarBoton(BtnGuardar);
         
@@ -147,23 +143,25 @@ public class ModificarDatos extends JDialog {
         PanelBotones.add(BtnVolver);
         PanelBotones.add(BtnBorrar);
         
+        PanelForm.add(Box.createVerticalStrut(10));
+        PanelForm.add(PanelBotones);
+        
+        PanelFondo.setLayout(new BorderLayout());
+        PanelFondo.add(PanelForm, BorderLayout.CENTER);
+        
         getRootPane().setDefaultButton(BtnGuardar);
     }
     
-    private void AnadirFila(JPanel form, GridBagConstraints gbc, int fila, String label, JComponent field) {
+    private void AnadirFila(JPanel panel, String label, JComponent field) {
         JLabel lbl = new JLabel(label);
         EstilizarLabel(lbl);
         
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy = fila;
+        lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
+        field.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        form.add(lbl, gbc);
-        
-        gbc.gridx = 1;
-        gbc.gridy = fila;
-        
-        form.add(field, gbc);
+        panel.add(lbl);
+        panel.add(field);
+        panel.add(Box.createVerticalStrut(4));
     }
     
     private void onGuardar() {
@@ -266,7 +264,7 @@ public class ModificarDatos extends JDialog {
         boton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 2), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
         boton.setOpaque(true);
         boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        boton.setPreferredSize(new Dimension(220, 44));
+        boton.setPreferredSize(new Dimension(190, 44));
         
         boton.addMouseListener(new MouseAdapter() {
             @Override
@@ -283,37 +281,36 @@ public class ModificarDatos extends JDialog {
         });
     }
     
+    private void EstilizarLabel(JLabel label) {
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        label.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
+        label.setForeground(new Color(230, 190, 100));
+        label.setOpaque(true);
+        label.setBackground(new Color(38, 20, 6, 200));
+        label.setBorder(BorderFactory.createEmptyBorder(10, 2, 4, 0));
+    }
+    
     private void EstilizarCampoTexto(JTextComponent campo) {
-        campo.setFont(new Font("DIN Condensed", Font.BOLD, 18));
-        campo.setBackground(new Color(25, 25, 25));
-        campo.setForeground(Color.WHITE);
-        campo.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(0, 0, 120), 2), BorderFactory.createEmptyBorder(5, 20, 5, 20)));
+        campo.setFont(new Font("Palatino linotype", Font.BOLD, 15));
+        campo.setBackground(new Color(58, 34, 12));
+        campo.setForeground(new Color(230, 190, 100));
+        campo.setCaretColor(new Color(230, 190, 100));
+        campo.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 2), BorderFactory.createEmptyBorder(6, 12, 6, 12)));
         campo.setOpaque(true);
-        campo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        campo.setPreferredSize(new Dimension(220, 44));
+        campo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        campo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         
         campo.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                campo.setBackground(new Color(60, 0, 0));
-                campo.setForeground(new Color(255, 220, 130));
+                campo.setBackground(new Color(80, 45, 10));
             }
             
             @Override
             public void mouseExited(MouseEvent e) {
-                campo.setBackground(new Color(25, 25, 25));
-                campo.setForeground(Color.WHITE);
+                campo.setBackground(new Color(58, 34, 12));
             }
         });
-    }
-    
-    private void EstilizarLabel(JLabel label) {
-        label.setAlignmentX(Component.LEFT_ALIGNMENT);
-        label.setFont(new Font("DIN Condensed", Font.BOLD, 18));
-        label.setForeground(Color.WHITE);
-        label.setBackground(new Color(0, 0, 0, 180));
-        label.setOpaque(true);
-        label.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(2, 6, 2, 6), BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(60, 30, 0))));
     }
     
     private void MostrarMensaje(String mensaje, String titulo, int tipo) {

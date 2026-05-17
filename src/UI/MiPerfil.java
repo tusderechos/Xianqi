@@ -222,8 +222,8 @@ public class MiPerfil extends JFrame {
     
     private void EstilizarLabel(JLabel label) {
         label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setFont(new Font("DIN Condensed", Font.BOLD, 22));
-        label.setForeground(new Color(230, 230, 150));
+        label.setFont(new Font("Palatino Linotype", Font.BOLD, 22));
+        label.setForeground(new Color(230, 190, 100));
         label.setBackground(new Color(0, 0, 0, 150));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         label.setOpaque(true);

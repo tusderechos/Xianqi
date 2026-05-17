@@ -79,6 +79,7 @@ public class MenuInicial extends JFrame {
         
         PanelFondo.setLayout(new BorderLayout());
         PanelFondo.add(PanelBotones, BorderLayout.SOUTH);
+
         PanelFondo.repaint();
     }
     

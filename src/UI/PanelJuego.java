@@ -586,12 +586,70 @@ public class PanelJuego extends JFrame {
         });
     }
     
-    private void MostrarMensaje(String msg, String titulo, int tipo) {
-        JOptionPane.showMessageDialog(this, msg, titulo, tipo);
+    private void MostrarMensaje(String mensaje, String titulo, int tipo) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(new Color(58, 34, 12));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 3), BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+        
+        JLabel lblmensaje = new JLabel("<html><div style='text-align: center; width: 250px;'>" + mensaje.replace("\n", "<br>") + "</div></html>");
+        lblmensaje.setForeground(new Color(230, 190, 100));
+        lblmensaje.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
+        lblmensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        panel.add(lblmensaje);
+        
+        UIManager.put("OptionPane.background", new Color(58, 34, 12));
+        UIManager.put("Panel.background", new Color(58, 34, 12));
+        UIManager.put("OptionPane.messageForeground", new Color(230, 190, 100));
+        UIManager.put("Button.background", new Color(80, 45, 10));
+        UIManager.put("Button.foreground", new Color(230, 190, 100));
+        UIManager.put("Button.font", new Font("Palatino Linotype", Font.BOLD, 14));
+        UIManager.put("Button.border", BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 1), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        
+        JOptionPane.showMessageDialog(this, panel, titulo, tipo);
+        
+        UIManager.put("OptionPane.background", null);
+        UIManager.put("Panel.background", null);
+        UIManager.put("OptionPane.messageForeground", null);
+        UIManager.put("Button.background", null);
+        UIManager.put("Button.foreground", null);
+        UIManager.put("Button.font", null);
+        UIManager.put("Button.border", null);
     }
-
-    private int MostrarConfirmacion(String msg, String titulo) {
-        return JOptionPane.showConfirmDialog(this, msg, titulo, JOptionPane.YES_NO_OPTION);
+    
+    private int MostrarConfirmacion(String mensaje, String titulo) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(new Color(58, 34, 12));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 3), BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+        
+        JLabel lblmensaje = new JLabel("<html><div style='text-align: center; width: 250px;'>" + mensaje.replace("\n", "<br>") + "</div></html>");
+        lblmensaje.setForeground(new Color(230, 190, 100));
+        lblmensaje.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
+        lblmensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        panel.add(lblmensaje);
+        
+        UIManager.put("OptionPane.background", new Color(58, 34, 12));
+        UIManager.put("Panel.background", new Color(58, 34, 12));
+        UIManager.put("OptionPane.messageForeground", new Color(230, 190, 100));
+        UIManager.put("Button.background", new Color(80, 45, 10));
+        UIManager.put("Button.foreground", new Color(230, 190, 100));
+        UIManager.put("Button.font", new Font("Palatino Linotype", Font.BOLD, 14));
+        UIManager.put("Button.border", BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 1), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        
+        int resultado = JOptionPane.showConfirmDialog(this, panel, titulo, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        
+        UIManager.put("OptionPane.background", null);
+        UIManager.put("Panel.background", null);
+        UIManager.put("OptionPane.messageForeground", null);
+        UIManager.put("Button.background", null);
+        UIManager.put("Button.foreground", null);
+        UIManager.put("Button.font", null);
+        UIManager.put("Button.border", null);
+        
+        return resultado;
     }
     
     public boolean isInicializacionExitosa() {

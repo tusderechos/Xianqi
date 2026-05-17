@@ -138,22 +138,23 @@ public class MenuInicial extends JFrame {
     private void MostrarMensaje(String mensaje, String titulo, int tipo) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(new Color(20, 20, 35));
-        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(120, 0, 0), 3), BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+        panel.setBackground(new Color(58, 34, 12));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 3), BorderFactory.createEmptyBorder(20, 20, 20, 20)));
         
         JLabel lblmensaje = new JLabel("<html><div style='text-align: center; width: 250px;'>" + mensaje.replace("\n", "<br>") + "</div></html>");
-        lblmensaje.setForeground(Color.WHITE);
-        lblmensaje.setFont(new Font("DIN Condensed", Font.BOLD, 16));
+        lblmensaje.setForeground(new Color(230, 190, 100));
+        lblmensaje.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
         lblmensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         panel.add(lblmensaje);
         
-        UIManager.put("OptionPane.background", new Color(20, 20, 35));
-        UIManager.put("Panel.background", new Color(20, 20, 35));
-        UIManager.put("OptionPane.messageForeground", Color.WHITE);
-        UIManager.put("Button.background", new Color(25, 25, 25));
-        UIManager.put("Button.foreground", new Color(220, 180, 120));
-        UIManager.put("Button.border", BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(120, 0, 0), 1), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        UIManager.put("OptionPane.background", new Color(58, 34, 12));
+        UIManager.put("Panel.background", new Color(58, 34, 12));
+        UIManager.put("OptionPane.messageForeground", new Color(230, 190, 100));
+        UIManager.put("Button.background", new Color(80, 45, 10));
+        UIManager.put("Button.foreground", new Color(230, 190, 100));
+        UIManager.put("Button.font", new Font("Palatino Linotype", Font.BOLD, 14));
+        UIManager.put("Button.border", BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 1), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
         
         JOptionPane.showMessageDialog(this, panel, titulo, tipo);
         
@@ -162,28 +163,30 @@ public class MenuInicial extends JFrame {
         UIManager.put("OptionPane.messageForeground", null);
         UIManager.put("Button.background", null);
         UIManager.put("Button.foreground", null);
+        UIManager.put("Button.font", null);
         UIManager.put("Button.border", null);
     }
     
     private int MostrarConfirmacion(String mensaje, String titulo) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(new Color(20, 20, 35));
-        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(120, 0, 0), 3), BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+        panel.setBackground(new Color(58, 34, 12));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 3), BorderFactory.createEmptyBorder(20, 20, 20, 20)));
         
         JLabel lblmensaje = new JLabel("<html><div style='text-align: center; width: 250px;'>" + mensaje.replace("\n", "<br>") + "</div></html>");
-        lblmensaje.setForeground(Color.WHITE);
-        lblmensaje.setFont(new Font("DIN Condensed", Font.BOLD, 16));
+        lblmensaje.setForeground(new Color(230, 190, 100));
+        lblmensaje.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
         lblmensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         panel.add(lblmensaje);
         
-        UIManager.put("OptionPane.background", new Color(20, 20, 35));
-        UIManager.put("Panel.background", new Color(20, 20, 35));
-        UIManager.put("OptionPane.messageForeground", Color.WHITE);
-        UIManager.put("Button.background", new Color(25, 25, 25));
-        UIManager.put("Button.foreground", new Color(220, 180, 120));
-        UIManager.put("Button.border", BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(120, 0, 0), 1), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        UIManager.put("OptionPane.background", new Color(58, 34, 12));
+        UIManager.put("Panel.background", new Color(58, 34, 12));
+        UIManager.put("OptionPane.messageForeground", new Color(230, 190, 100));
+        UIManager.put("Button.background", new Color(80, 45, 10));
+        UIManager.put("Button.foreground", new Color(230, 190, 100));
+        UIManager.put("Button.font", new Font("Palatino Linotype", Font.BOLD, 14));
+        UIManager.put("Button.border", BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 1), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
         
         int resultado = JOptionPane.showConfirmDialog(this, panel, titulo, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         
@@ -192,6 +195,7 @@ public class MenuInicial extends JFrame {
         UIManager.put("OptionPane.messageForeground", null);
         UIManager.put("Button.background", null);
         UIManager.put("Button.foreground", null);
+        UIManager.put("Button.font", null);
         UIManager.put("Button.border", null);
         
         return resultado;

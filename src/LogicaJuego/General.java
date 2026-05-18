@@ -12,7 +12,7 @@ package LogicaJuego;
 import enums.ColorPieza;
 import enums.TipoPieza;
 
-public class General extends PiezaConfinada {
+public final class General extends PiezaConfinada {
     
     public General(ColorPieza Color, int Fila, int Col) {
         super(Color, TipoPieza.GENERAL, Fila, Col);

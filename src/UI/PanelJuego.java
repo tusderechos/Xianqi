@@ -63,7 +63,7 @@ public class PanelJuego extends JFrame {
         }
         
         setTitle("XIANGQI");
-        setSize(1000, 820);
+        setSize(1100, 860);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(menuPrincipal);
@@ -655,5 +655,4 @@ public class PanelJuego extends JFrame {
     public boolean isInicializacionExitosa() {
         return InicializacionExitosa;
     }
-
 }

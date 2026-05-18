@@ -78,6 +78,7 @@ public class MenuInicial extends JFrame {
         PanelBotones.add(Box.createVerticalStrut(10));
         
         PanelFondo.setLayout(new BorderLayout());
+        PanelFondo.add(CrearPanelFrase(), BorderLayout.NORTH);
         PanelFondo.add(PanelBotones, BorderLayout.SOUTH);
 
         PanelFondo.repaint();
@@ -200,5 +201,60 @@ public class MenuInicial extends JFrame {
         UIManager.put("Button.border", null);
         
         return resultado;
+    }
+    
+    private JPanel CrearPanelFrase() {        
+        JPanel contenedor = new JPanel() {
+            final String[] cols = {"IF YOU KNOW", "YOU ENEMY,", "AND KNOW", "YOURSELF,", "YOU WILL NEVER", "BE DEFEATED", "|SUN TZU"};
+            
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(new Color(220, 210, 180, 200));
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                g2d.setColor(new Color(100, 80, 40, 180));
+                g2d.setStroke(new BasicStroke(2));
+                g2d.drawRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 20, 20);
+                
+                g2d.setFont(new Font("Palatino Linotype", Font.BOLD, 12));
+                g2d.setColor(new Color(50, 30, 10));
+                FontMetrics fm = g2d.getFontMetrics();
+                int anchocol = (getWidth() - 30) / cols.length;
+                
+                for (int col = 0; col < cols.length; col++) {
+                    String[] palabras = cols[col].split(" ");
+                    int x = 15 + col * anchocol + anchocol / 2;
+                    int y = 15 + fm.getAscent();
+                    
+                    for (int palabra = 0; palabra < palabras.length; palabra++) {
+                        if (palabra > 0)
+                            y += fm.getHeight();
+                        
+                        for (int i = 0; i < palabras[palabra].length(); i++) {
+                            String letra = String.valueOf(palabras[palabra].charAt(i));
+                            g2d.drawString(letra, x - fm.stringWidth(letra) / 2, y);
+                            y += fm.getHeight() - 2;
+                        }
+                    }
+                }
+                
+                g2d.dispose();
+            }
+            
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(210, 280);
+            }
+        };
+        
+        contenedor.setOpaque(false);
+        
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        wrapper.setOpaque(false);
+        wrapper.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 0));
+        wrapper.add(contenedor);
+        
+        return wrapper;
     }
 }

@@ -15,7 +15,7 @@ public enum UIColors {
     LINEAS (new Color(93, 56, 17)),
     FONDO_PALACIO (new Color(205, 158, 70)),
     FONDO_PALACIO_DIAGONAL (new Color(188, 138, 50)),
-    FONDO_RIO (new Color(162, 198, 170)),
+    FONDO_RIO (new Color(219, 178, 101)),
     CELDA_SELECCION (new Color(120, 200, 80)),
     CELDA_DESTINO (new Color(80, 160, 220)),
     CELDA_HOVER (new Color(240, 220, 80)),
@@ -37,9 +37,9 @@ public enum UIColors {
     CELDA_CAPTURA_FONDO (new Color(48, 30, 10)),
     CELDA_CAPTURA_BORDE (new Color(90, 60, 20)),
     GRID_CAPTURA_FONDO (new Color(25, 14, 4)),
-    TEXTO_RIO (new Color(70, 130, 150)),
-    RIO_GRADIENTE_IZQ (new Color(80, 140, 160)),
-    RIO_GRADIENTE_DER (new Color(60, 120, 140));
+    TEXTO_RIO (new Color(95, 170, 190)),
+    RIO_GRADIENTE_IZQ (new Color(75, 155, 185)),
+    RIO_GRADIENTE_DER (new Color(45, 115, 150));
 
     private final Color color;
 

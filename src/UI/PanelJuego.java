@@ -10,10 +10,13 @@ package UI;
  */
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import ManejoCuentas.MemoriaCuentas;
 import LogicaJuego.LogicaXiangqi;
@@ -22,8 +25,6 @@ import LogicaJuego.Pieza;
 import enums.UIColors;
 import enums.ColorPieza;
 import enums.ResultadoMovimiento;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class PanelJuego extends JFrame {
     
@@ -63,56 +64,59 @@ public class PanelJuego extends JFrame {
         }
         
         setTitle("XIANGQI");
-        setSize(1100, 860);
+        setSize(1180, 860);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(menuPrincipal);
         
         JPanel PanelFondo = new JPanel(new BorderLayout());
         PanelFondo.setBackground(UIColors.FONDO_PANEL.getColor());
-        
         setContentPane(PanelFondo);
         
         JPanel header = new JPanel();
         header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
         header.setBackground(UIColors.HEADER_BG.getColor());
-        header.setBorder(BorderFactory.createEmptyBorder(14, 20, 14, 20));
+        header.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, UIColors.ORO_DECORATIVO.getColor()), BorderFactory.createEmptyBorder(18, 20, 18, 20)));
         
         JLabel lbltitulo = new JLabel("XIANGQI", SwingConstants.CENTER);
         lbltitulo.setForeground(UIColors.TEXTO_HEADER.getColor());
-        lbltitulo.setFont(new Font("Serif", Font.BOLD, 40));
+        lbltitulo.setFont(new Font("Palatino Linotype", Font.BOLD, 44));
         lbltitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         LblTurno = new JLabel("", SwingConstants.CENTER);
         LblTurno.setForeground(Color.WHITE);
-        LblTurno.setFont(new Font("Serif", Font.BOLD, 18));
+        LblTurno.setFont(new Font("Palatino Linotype", Font.BOLD, 20));
+        LblTurno.setOpaque(true);
+        LblTurno.setBackground(new Color(70, 40, 12));
+        LblTurno.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UIColors.ORO_DECORATIVO.getColor(), 1), BorderFactory.createEmptyBorder(5, 18, 5, 18)));
         LblTurno.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        LblInfo = new JLabel(" ", SwingConstants.CENTER);
-        LblInfo.setForeground(new Color(200, 200, 200));
-        LblInfo.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        LblInfo = new JLabel("Selecciona una pieza para mover", SwingConstants.CENTER);
+        LblInfo.setForeground(new Color(225, 200, 140));
+        LblInfo.setFont(new Font("Palatino Linotype", Font.PLAIN, 15));
         LblInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         header.add(lbltitulo);
-        header.add(Box.createVerticalStrut(6));
+        header.add(Box.createVerticalStrut(8));
         header.add(LblTurno);
-        header.add(Box.createVerticalStrut(4));
+        header.add(Box.createVerticalStrut(6));
         header.add(LblInfo);
         
         PanelFondo.add(header, BorderLayout.NORTH);
         
         JPanel PanelTablero = new JPanel(new GridLayout(10, 9, 2, 2));
         PanelTablero.setBackground(UIColors.LINEAS.getColor());
-        PanelTablero.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UIColors.LINEAS.getColor(), 3), BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+        PanelTablero.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UIColors.LINEAS.getColor(), 4), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         
         BtnTablero = new JButton[10][9];
         
         for (int fila = 0; fila < 10; fila++) {
             for (int col = 0; col < 9; col++) {
                 JButton boton = new JButton();
-                boton.setFont(new Font("Serif", Font.BOLD, 18));
+                boton.setFont(new Font("Palatino Linotype", Font.BOLD, 18));
                 boton.setMargin(new Insets(0, 0, 0, 0));
                 boton.setFocusPainted(false);
+                boton.setContentAreaFilled(true);
                 boton.setOpaque(true);
                 boton.setBackground(UIColors.FONDO_TABLERO.getColor());
                 boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -128,13 +132,14 @@ public class PanelJuego extends JFrame {
         
         JPanel tablerowrap = new JPanel(new BorderLayout());
         tablerowrap.setBackground(UIColors.FONDO_PANEL.getColor());
-        tablerowrap.setBorder(BorderFactory.createEmptyBorder(16, 24, 16, 24));
+        tablerowrap.setBorder(BorderFactory.createEmptyBorder(18, 26, 18, 26));
         tablerowrap.add(PanelTablero, BorderLayout.CENTER);
         
         PanelFondo.add(tablerowrap, BorderLayout.CENTER);
         
-        JPanel barrainferior = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 10));
+        JPanel barrainferior = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 12));
         barrainferior.setBackground(UIColors.HEADER_BG.getColor());
+        barrainferior.setBorder(BorderFactory.createMatteBorder(3, 0, 0, 0, UIColors.ORO_DECORATIVO.getColor()));
         
         JButton btnretirar = new JButton("RETIRAR");
         EstilizarBoton(btnretirar);
@@ -170,13 +175,11 @@ public class PanelJuego extends JFrame {
                     boton.setBackground(UIColors.CELDA_DESTINO.getColor());
                 } else if (esCeldaPalacio(fila, col)) {
                     boton.setBackground(UIColors.FONDO_PALACIO.getColor());
-                } else if (esCeldaRio(fila, col)) {
-                    boton.setBackground(UIColors.FONDO_RIO.getColor());
                 } else {
                     boton.setBackground(UIColors.FONDO_TABLERO.getColor());
                 }
                 
-                boton.setBorder(BorderFactory.createLineBorder(UIColors.LINEAS.getColor(), 1));
+                boton.setBorder(CrearBordeCelda(fila, col));
                 
                 if (pieza == null) {
                     boton.setText("");
@@ -202,52 +205,63 @@ public class PanelJuego extends JFrame {
         ActualizarCapturas();
     }
     
+    private Border CrearBordeCelda(int fila, int col) {
+        Border bordebase = BorderFactory.createLineBorder(UIColors.LINEAS.getColor());
+        
+        if (fila == 4) {
+            Border lineario = BorderFactory.createMatteBorder(0, 0, 5, 0, UIColors.RIO_GRADIENTE_IZQ.getColor());
+            return BorderFactory.createCompoundBorder(bordebase, lineario);
+        }
+        
+        return bordebase;
+    }
+    
     private JPanel CrearPanelCapturas() {
         JPanel panellateral = new JPanel();
         panellateral.setLayout(new BoxLayout(panellateral, BoxLayout.Y_AXIS));
         panellateral.setBackground(UIColors.HEADER_BG.getColor());
-        panellateral.setPreferredSize(new Dimension(150, 0));
-        panellateral.setBorder(BorderFactory.createEmptyBorder(8, 6, 8, 6));
+        panellateral.setPreferredSize(new Dimension(185, 0));
+        panellateral.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 3, 0, 0, UIColors.LINEAS.getColor()), BorderFactory.createEmptyBorder(14, 10, 14, 10)));
         
         LblNombreArriba = new JLabel("", SwingConstants.CENTER);
-        LblNombreArriba.setForeground(new Color(180, 180, 255));
-        LblNombreArriba.setFont(new Font("SansSerif", Font.BOLD, 11));
+        LblNombreArriba.setForeground(new Color(210, 210, 255));
+        LblNombreArriba.setFont(new Font("Palatino Linotype", Font.BOLD, 13));
         LblNombreArriba.setAlignmentX(Component.CENTER_ALIGNMENT);
-        LblNombreArriba.setMaximumSize(new Dimension(150, 20));
+        LblNombreArriba.setMaximumSize(new Dimension(170, 40));
         
-        PanelCapturaArriba = new JPanel(new GridLayout(5, 3, 2, 2));
-        PanelCapturaArriba.setBackground(new Color(30, 20, 10));
-        PanelCapturaArriba.setMaximumSize(new Dimension(150, 280));
-        PanelCapturaArriba.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(100, 80, 40), 1), BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+        PanelCapturaArriba = new JPanel(new GridLayout(5, 3, 3, 3));
+        PanelCapturaArriba.setBackground(UIColors.GRID_CAPTURA_FONDO.getColor());
+        PanelCapturaArriba.setMaximumSize(new Dimension(165, 245));
+        PanelCapturaArriba.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UIColors.GRID_CAPTURA_FONDO.getColor(), 2), BorderFactory.createEmptyBorder(6, 6, 6, 6)));
         
         JLabel lblseparador = new JLabel("-- vs --", SwingConstants.CENTER);
-        lblseparador.setForeground(new Color(180, 150, 80));
-        lblseparador.setFont(new Font("SansSerif", Font.BOLD, 12));
+        lblseparador.setForeground(UIColors.TEXTO_HEADER.getColor());
+        lblseparador.setFont(new Font("Palatino Linotype", Font.BOLD, 14));
         lblseparador.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblseparador.setMaximumSize(new Dimension(150, 30));
+        lblseparador.setMaximumSize(new Dimension(170, 35));
         
         LblNombreAbajo = new JLabel("", SwingConstants.CENTER);
         LblNombreAbajo.setForeground(UIColors.TEXTO_PIEZA_ROJO.getColor());
-        LblNombreAbajo.setFont(new Font("SansSerif", Font.BOLD, 11));
+        LblNombreAbajo.setFont(new Font("Palatino Linotype", Font.BOLD, 13));
         LblNombreAbajo.setAlignmentX(Component.CENTER_ALIGNMENT);
-        LblNombreAbajo.setMaximumSize(new Dimension(150, 20));
+        LblNombreAbajo.setMaximumSize(new Dimension(170, 40));
         
-        PanelCapturaAbajo = new JPanel(new GridLayout(5, 3, 2, 2));
-        PanelCapturaAbajo.setBackground(new Color(30, 20, 10));
-        PanelCapturaAbajo.setMaximumSize(new Dimension(150, 280));
-        PanelCapturaAbajo.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(100, 80, 40), 1), BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+        PanelCapturaAbajo = new JPanel(new GridLayout(5, 3, 3, 3));
+        PanelCapturaAbajo.setBackground(UIColors.GRID_CAPTURA_FONDO.getColor());
+        PanelCapturaAbajo.setMaximumSize(new Dimension(165, 245));
+        PanelCapturaAbajo.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UIColors.CELDA_CAPTURA_BORDE.getColor(), 2), BorderFactory.createEmptyBorder(6, 6, 6, 6)));
         
-        panellateral.add(Box.createVerticalStrut(10));
+        panellateral.add(Box.createVerticalStrut(8));
         panellateral.add(LblNombreArriba);
-        panellateral.add(Box.createVerticalStrut(6));
+        panellateral.add(Box.createVerticalStrut(8));
         panellateral.add(PanelCapturaArriba);
         panellateral.add(Box.createVerticalGlue());
         panellateral.add(lblseparador);
         panellateral.add(Box.createVerticalGlue());
         panellateral.add(PanelCapturaAbajo);
-        panellateral.add(Box.createVerticalStrut(6));
+        panellateral.add(Box.createVerticalStrut(8));
         panellateral.add(LblNombreAbajo);
-        panellateral.add(Box.createVerticalStrut(10));
+        panellateral.add(Box.createVerticalStrut(8));
         
         return panellateral;
     }
@@ -256,15 +270,24 @@ public class PanelJuego extends JFrame {
         Partida partida = Juego.getPartida();
         ColorPieza coloractivo = partida.getColorJugador(UsuarioActivo);
         
-        ArrayList<Pieza> capturaarriba = coloractivo == ColorPieza.ROJO ? Juego.getCapturasNegro() : Juego.getCapturasRojo();
-        ArrayList<Pieza> capturaabajo = coloractivo == ColorPieza.ROJO ? Juego.getCapturasRojo() : Juego.getCapturasNegro();
+        ArrayList<Pieza> piezasmuertasrival;
+        ArrayList<Pieza> piezasmuertasmias;
+        
         String rival = coloractivo == ColorPieza.ROJO ? partida.getJugador2() : partida.getJugador1();
         
-        LblNombreArriba.setText(rival + " capturo: ");
-        LblNombreAbajo.setText(UsuarioActivo + " capturo: ");
+        if (coloractivo == ColorPieza.ROJO) {
+            piezasmuertasrival = Juego.getCapturasNegro();
+            piezasmuertasmias = Juego.getCapturasRojo();
+        } else {
+            piezasmuertasrival = Juego.getCapturasRojo();
+            piezasmuertasmias = Juego.getCapturasNegro();
+        }
         
-        RefrescarPanelCaptura(PanelCapturaArriba, capturaarriba);
-        RefrescarPanelCaptura(PanelCapturaAbajo, capturaabajo);
+        LblNombreArriba.setText("<html><center>" + rival + "<br>capturo</center></html>");
+        LblNombreAbajo.setText("<html><center>" + UsuarioActivo + "<br>capturo</center></html>");
+        
+        RefrescarPanelCaptura(PanelCapturaArriba, piezasmuertasrival);
+        RefrescarPanelCaptura(PanelCapturaAbajo, piezasmuertasmias);
     }
     
     private void RefrescarPanelCaptura(JPanel panel, ArrayList<Pieza> capturas) {
@@ -273,15 +296,22 @@ public class PanelJuego extends JFrame {
         for (int i = 0; i < 15; i++) {
             JLabel lbl = new JLabel("", SwingConstants.CENTER);
             lbl.setOpaque(true);
-            lbl.setBackground(new Color(50, 35, 15));
-            lbl.setBorder(BorderFactory.createLineBorder(new Color(80, 60, 30), 1));
-            lbl.setPreferredSize(new Dimension(36, 36));
-            
+            lbl.setBackground(UIColors.CELDA_CAPTURA_FONDO.getColor());
+            lbl.setPreferredSize(new Dimension(42, 42));
+            lbl.setFont(new Font("Palatino Linotype", Font.BOLD, 18));
+            lbl.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(UIColors.CELDA_CAPTURA_BORDE.getColor(), 1), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+
             if (i < capturas.size()) {
                 Pieza pieza = capturas.get(i);
                 lbl.setText(pieza.getSimbolo());
-                lbl.setFont(new Font("Serif", Font.BOLD, 13));
-                lbl.setForeground(pieza.getColor() == ColorPieza.ROJO ? UIColors.TEXTO_PIEZA_ROJO.getColor() : UIColors.TEXTO_PIEZA_NEGRA.getColor());
+                
+                if (pieza.getColor() == ColorPieza.ROJO) {
+                    lbl.setForeground(new Color(235, 45, 35));
+                    lbl.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(210, 55, 45), 2), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+                } else {
+                    lbl.setForeground(new Color(245, 245, 195));
+                    lbl.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(225, 210, 160), 2), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+                }
             }
             
             panel.add(lbl);
@@ -296,10 +326,10 @@ public class PanelJuego extends JFrame {
             return false;
         return (fila >= 0 && fila <= 2) || (fila >= 7 && fila <= 9);
     }
-    
-    private boolean esCeldaRio(int fila, int col) {
-        return fila == 4 || fila == 5;
-    }
+//    
+//    private boolean esCeldaRio(int fila, int col) {
+//        return fila == 4 || fila == 5;
+//    }
     
     private void DibujarPalacio() {
         //Pinta las dos diagonales del palacio encima de los botones existentes
@@ -311,7 +341,6 @@ public class PanelJuego extends JFrame {
         
         for (int[] rango : palacios) {
             int finicio = rango[0];
-            int ffin = rango[1];
             
             //Diagonal \
             for (int i = 0; i <= 2; i++) {
@@ -352,10 +381,16 @@ public class PanelJuego extends JFrame {
         Partida partida = Juego.getPartida();
         String turno = Juego.getJugadorTurno();
         ColorPieza color = partida.getColorJugador(turno);
-        String colorstr = color == ColorPieza.ROJO ? "ROJO" : "NEGRO";
         
-        LblTurno.setText("Turno: " + turno + " (" + colorstr + ")");
-        LblTurno.setForeground(color == ColorPieza.ROJO ? UIColors.PIEZA_ROJO.getColor() : new Color(180, 180, 255));
+        if (color == ColorPieza.ROJO) {
+            LblTurno.setText("TURNO DE " + turno.toUpperCase() + " • ROJO");
+            LblTurno.setForeground(new Color(255, 95, 80));
+            LblTurno.setBackground(new Color(70, 25, 15));
+        } else {
+            LblTurno.setText("TURNO DE " + turno.toUpperCase() + " • NEGRO");
+            LblTurno.setForeground(new Color(210, 210, 255));
+            LblTurno.setBackground(new Color(30, 28, 45));
+        }
     }
     
     private void setInfo(String mensaje) {
@@ -366,7 +401,7 @@ public class PanelJuego extends JFrame {
         FilaSeleccionada = -1;
         ColSeleccionada = -1;
         HaySeleccion = false;
-        setInfo(" ");
+        setInfo("Selecciona una pieza para mover");
     }
     
     private void RegistrarResultado(String ganador, String perdedor) {
@@ -383,7 +418,6 @@ public class PanelJuego extends JFrame {
             return;
         
         Pieza piezadestino = Juego.getPieza(fila, col);
-        ColorPieza coloractivo = Juego.getPartida().getColorJugador(UsuarioActivo);
         String turnoactual = Juego.getJugadorTurno();
         
         if (!HaySeleccion) {
@@ -398,6 +432,7 @@ public class PanelJuego extends JFrame {
             FilaSeleccionada = fila;
             ColSeleccionada = col;
             HaySeleccion = true;
+            setInfo("Pieza seleccionada. Elige una casilla de destino");
             RenderizarTablero();
             return;
         }
@@ -413,6 +448,7 @@ public class PanelJuego extends JFrame {
         if (piezadestino != null && piezadestino.getColor() == Juego.getPartida().getColorJugador(turnoactual)) {
             FilaSeleccionada = fila;
             ColSeleccionada = col;
+            setInfo("Nueva pieza seleccionada");
             RenderizarTablero();
             return;
         }
@@ -504,12 +540,12 @@ public class PanelJuego extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
         
         JLabel lbl = new JLabel("Selecciona al jugador 2:");
-        lbl.setForeground(Color.WHITE);
-        lbl.setFont(new Font("SansSerif", Font.BOLD, 15));
+        lbl.setForeground(UIColors.TEXTO_HEADER.getColor());
+        lbl.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
         lbl.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         combo.setAlignmentX(Component.CENTER_ALIGNMENT);
-        combo.setMaximumSize(new Dimension(260, 36));
+        combo.setMaximumSize(new Dimension(260, 38));
         
         panel.add(lbl);
         panel.add(Box.createVerticalStrut(12));
@@ -564,8 +600,8 @@ public class PanelJuego extends JFrame {
     
     private void EstilizarBoton(JComponent boton) {
         boton.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
-        boton.setBackground(new Color(80, 45, 10));
-        boton.setForeground(new Color(230, 190, 100));
+        boton.setBackground(UIColors.BOTON_FONDO.getColor());
+        boton.setForeground(UIColors.TEXTO_HEADER.getColor());
         boton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 2), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
         boton.setOpaque(true);
         boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -574,14 +610,14 @@ public class PanelJuego extends JFrame {
         boton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                boton.setBackground(new Color(120, 75, 20));
-                boton.setForeground(new Color(255, 220, 130));
+                boton.setBackground(UIColors.BOTON_HOVER_FONDO.getColor());
+                boton.setForeground(UIColors.BOTON_HOVER_TEXTO.getColor());
             }
             
             @Override
             public void mouseExited(MouseEvent e) {
-                boton.setBackground(new Color(80, 45, 10));
-                boton.setForeground(new Color(230, 190, 100));
+                boton.setBackground(UIColors.BOTON_FONDO.getColor());
+                boton.setForeground(UIColors.TEXTO_HEADER.getColor());
             }
         });
     }
@@ -593,17 +629,17 @@ public class PanelJuego extends JFrame {
         panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 3), BorderFactory.createEmptyBorder(20, 20, 20, 20)));
         
         JLabel lblmensaje = new JLabel("<html><div style='text-align: center; width: 250px;'>" + mensaje.replace("\n", "<br>") + "</div></html>");
-        lblmensaje.setForeground(new Color(230, 190, 100));
+        lblmensaje.setForeground(UIColors.TEXTO_HEADER.getColor());
         lblmensaje.setFont(new Font("Palatino Linotype", Font.BOLD, 16));
         lblmensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         panel.add(lblmensaje);
         
-        UIManager.put("OptionPane.background", new Color(58, 34, 12));
-        UIManager.put("Panel.background", new Color(58, 34, 12));
-        UIManager.put("OptionPane.messageForeground", new Color(230, 190, 100));
-        UIManager.put("Button.background", new Color(80, 45, 10));
-        UIManager.put("Button.foreground", new Color(230, 190, 100));
+        UIManager.put("OptionPane.background", UIColors.FONDO_PANEL.getColor());
+        UIManager.put("Panel.background", UIColors.FONDO_PANEL.getColor());
+        UIManager.put("OptionPane.messageForeground", UIColors.TEXTO_HEADER.getClass());
+        UIManager.put("Button.background", UIColors.BOTON_FONDO.getColor());
+        UIManager.put("Button.foreground", UIColors.TEXTO_HEADER.getColor());
         UIManager.put("Button.font", new Font("Palatino Linotype", Font.BOLD, 14));
         UIManager.put("Button.border", BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 1), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
         
@@ -631,11 +667,11 @@ public class PanelJuego extends JFrame {
         
         panel.add(lblmensaje);
         
-        UIManager.put("OptionPane.background", new Color(58, 34, 12));
-        UIManager.put("Panel.background", new Color(58, 34, 12));
-        UIManager.put("OptionPane.messageForeground", new Color(230, 190, 100));
-        UIManager.put("Button.background", new Color(80, 45, 10));
-        UIManager.put("Button.foreground", new Color(230, 190, 100));
+        UIManager.put("OptionPane.background", UIColors.FONDO_PANEL.getColor());
+        UIManager.put("Panel.background", UIColors.FONDO_PANEL.getColor());
+        UIManager.put("OptionPane.messageForeground", UIColors.TEXTO_HEADER.getClass());
+        UIManager.put("Button.background", UIColors.BOTON_FONDO.getColor());
+        UIManager.put("Button.foreground", UIColors.TEXTO_HEADER.getColor());
         UIManager.put("Button.font", new Font("Palatino Linotype", Font.BOLD, 14));
         UIManager.put("Button.border", BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(160, 110, 40), 1), BorderFactory.createEmptyBorder(5, 15, 5, 15)));
         
